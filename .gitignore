@@ -1,0 +1,94 @@
+# Root-Level Gitignore File
+
+## Global ignores ##
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+*.rej
+.DS_Store
+Thumbs.db
+node_modules
+.idea
+.vscode
+
+# 환경 설정 파일 (Environment Files)
+.env
+.env.*
+config.properties
+
+# ------------------------
+# Spring Boot (backend/)
+# ------------------------
+!backend/gradle/wrapper/gradle-wrapper.jar
+backend/HELP.md
+backend/.gradle/
+backend/build/
+backend/application-secret.properties
+backend/application.secret.yml
+backend/application.log*
+
+# IDE 및 빌드 관련 파일
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.factorypath
+backend/.apt_generated
+backend/.springBeans
+backend/.sts4-cache
+backend/bin/
+backend/out/
+backend/nbproject/private/
+backend/nbbuild/
+backend/dist/
+backend/nbdist/
+backend/.nb-gradle/
+backend/.idea/
+backend/*.iws
+backend/*.iml
+backend/*.ipr
+backend/workspace-spring-tool-suite-4-*/
+
+# 특정 디렉토리의 빌드 및 바이너리 파일 제외
+!backend/src/main/**/build/
+!backend/src/test/**/build/
+!backend/src/main/**/bin/
+!backend/src/test/**/bin/
+!backend/src/main/**/out/
+!backend/src/test/**/out/
+
+# 패키지 락 파일
+backend/package-lock.json
+backend/yarn.lock
+
+# ------------------------
+# React (frontend/)
+# ------------------------
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/coverage/
+frontend/*.module.css.d.ts
+
+# 로그 및 디버그 파일
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# 환경 설정 파일
+frontend/.env
+frontend/.env.*
+
+# 테스트 관련 파일
+frontend/.jest-cache/
+frontend/.jest/
+
+# IDE 및 편집기 설정 파일
+frontend/.idea/
+frontend/.vscode/
+
+# 패키지 락 파일
+frontend/package-lock.json
+frontend/yarn.lock
