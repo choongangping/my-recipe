@@ -1,6 +1,6 @@
 // 이 파일은 라우팅을 위한 진입점(entry point) 역할을 합니다.
 // 실제 화면 구현은 @/features/home/screens/HomeScreen.tsx 에 있습니다.
-import HomeScreen from '@/src/features/home/HomeScreen';
+import HomeScreen from '@/features/home/HomeScreen';
 
 export default function HomePage() {
   // 실제 화면 컴포넌트를 반환합니다.
