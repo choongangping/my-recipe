@@ -6,7 +6,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
       }}>
       <Tabs.Screen
         name="index" // app/(tabs)/index.tsx
