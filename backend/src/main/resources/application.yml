@@ -8,6 +8,8 @@ spring:
     name: my-recipe # 어플리케이션 이름
   config:
     import: "optional:file:./backend/application.secret.yml" # 외부 설정 파일 import
+  messages:
+    encoding: UTF-8 # 메시지 파일의 인코딩을 UTF-8로 설정
 
   # 데이터 소스 및 HikariCP(DB 커넥션 풀) 설정
   datasource:
@@ -18,7 +20,7 @@ spring:
 # MyBatis 설정
 mybatis:
   # classpath
-  mapper-locations: mappers/**/*.xml
+  mapper-locations: mapper/**/*.xml
   configuration:
     # DB-Java 필드명 매핑 (user_id (DB) -> userId (Java))
     map-underscore-to-camel-case: true
