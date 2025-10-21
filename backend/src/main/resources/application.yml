@@ -31,9 +31,10 @@ server:
   tomcat:
     connection-timeout: 5000 # 연결 타임아웃 (밀리초)
   error:
-    include-message: always
+    include-stacktrace: never # 예외 응답 body에 stacktrace 미포함
+    include-message: always   # 예외 응답 body에 message 항상 포함
     whitelabel:
-      enabled: false
+      enabled: true
 
 # 로깅 설정
 logging:
