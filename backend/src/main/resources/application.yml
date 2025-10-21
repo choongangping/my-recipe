@@ -1,5 +1,9 @@
 spring:
   # 스프링 관련 공통 설정
+  mvc:
+    servlet:
+      path: /api # 모든 요청 URL에 /api 접두사 추가
+
   application:
     name: my-recipe # 어플리케이션 이름
   config:
@@ -31,8 +35,8 @@ server:
 
 # 로깅 설정
 logging:
-  file:
-    name: ${LOG_PATH} # 로그 파일 경로 및 이름
+#  file:
+#    name: ${LOG_PATH} # 로그 파일 경로 및 이름
   level:
     com.myrecipe.mapper: trace # MyBatis SQL 쿼리 로깅
 
