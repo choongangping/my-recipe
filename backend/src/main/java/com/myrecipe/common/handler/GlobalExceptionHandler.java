@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.UUID;
+
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -22,15 +24,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex, HttpServletRequest request) {
         // 예외 발생 시 분석을 위한 로깅
-        log.warn("Unauthorized access attempt: Message='{}', ErrorCode='{}'",
-                ex.getMessage(), ex.getErrorCode(), ex);
+        String traceId = generateTraceId();
+        log.warn("[{}] Unauthorized access attempt: Message='{}', ErrorCode='{}'",
+                traceId, ex.getMessage(), ex.getErrorCode(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(
                 HttpStatus.UNAUTHORIZED,
                 ex.getErrorCode(),
                 ex.getMessage(),
-                request.getRequestURI()
+                request.getRequestURI(),
+                traceId
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -41,15 +45,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
         // 예외 발생 시 분석을 위한 로깅
-        log.warn("Resource not found: Message='{}', ErrorCode='{}'",
-                ex.getMessage(), ex.getErrorCode(), ex);
+        String traceId = generateTraceId();
+        log.warn("[{}] Resource not found: Message='{}', ErrorCode='{}'",
+                traceId, ex.getMessage(), ex.getErrorCode(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(
                 HttpStatus.NOT_FOUND,
                 ex.getErrorCode(),
                 ex.getMessage(),
-                request.getRequestURI()
+                request.getRequestURI(),
+                traceId
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
@@ -60,15 +66,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataPersistenceException.class)
     public ResponseEntity<ErrorResponse> handleDataPersistenceException(DataPersistenceException ex, HttpServletRequest request) {
         // 예외 발생 시 분석을 위한 로깅
-        log.error("Data Persistence Error: Message='{}', ErrorCode='{}'",
-                ex.getMessage(), ex.getErrorCode(), ex);
+        String traceId = generateTraceId();
+        log.error("[{}] Data Persistence Error: Message='{}', ErrorCode='{}'",
+                traceId, ex.getMessage(), ex.getErrorCode(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ex.getErrorCode(),
                 ex.getMessage(),
-                request.getRequestURI()
+                request.getRequestURI(),
+                traceId
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -86,15 +94,17 @@ public class GlobalExceptionHandler {
                 .orElse(defaultMessage);
 
         // 예외 발생 시 분석을 위한 로깅
-        log.warn("Validation failed: Message='{}', Path='{}'",
-                detailedMessage, request.getRequestURI(), ex);
+        String traceId = generateTraceId();
+        log.warn("[{}] Validation failed: Message='{}', Path='{}'",
+                traceId, detailedMessage, request.getRequestURI(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(
                 HttpStatus.BAD_REQUEST,
                 "ERR_VALIDATION_FAILED",
                 detailedMessage,
-                request.getRequestURI()
+                request.getRequestURI(),
+                traceId
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -105,15 +115,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ex, HttpServletRequest request) {
         // 예외 발생 시 분석을 위한 로깅
-        log.error("An unexpected error occurred: {}", ex.getMessage(), ex);
+        String traceId = generateTraceId();
+        log.error("[{}] An unexpected error occurred: {}",
+                traceId, ex.getMessage(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "ERR_COMMON_INTERNAL_SERVER_ERROR",
                 "서버 내부 오류가 발생했습니다.",
-                request.getRequestURI()
+                request.getRequestURI(),
+                traceId
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // 로그 추적을 위한 고유 식별 id (예: 550e84)
+    private String generateTraceId() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 6);
     }
 }
