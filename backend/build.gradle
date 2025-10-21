@@ -34,8 +34,9 @@ dependencies {
     // MySQL 데이터베이스 드라이버
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0' // API 자동 문서화
+    // Swagger (API 자동 문서화)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    implementation 'org.apache.commons:commons-lang3:3.19.0'
 
     // Mapstruct (Domain-Dto 매핑 자동화)
     implementation 'org.mapstruct:mapstruct:1.6.3'
