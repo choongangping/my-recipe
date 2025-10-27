@@ -42,6 +42,9 @@ logging:
 #    name: ${LOG_PATH} # 로그 파일 경로 및 이름
   level:
     com.myrecipe.mapper: trace # MyBatis SQL 쿼리 로깅
+    root: info
+#    org.springframework: info
+#    org.springframework.web: debug
 
 # JWT 설정
 service:

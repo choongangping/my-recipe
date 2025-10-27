@@ -30,7 +30,7 @@ public class RecipeService {
     // ---- 특정 레시피 조회 ---- //
     public Recipe getRecipe(long id) {
         // 입력 데이터 로깅
-        log.debug("Getting recipe: ID='{}'", id);
+        log.info("Getting recipe: ID='{}'", id);
 
         // 레시피 DB select
         Recipe recipe = recipeMapper.getRecipe(id);
@@ -47,7 +47,7 @@ public class RecipeService {
     @Transactional
     public Recipe createRecipe(RecipeCreateRequest request) {
         // 입력 데이터 로깅
-        log.debug("Creating recipe: request='{}'", request);
+        log.info("Creating recipe: request='{}'", request);
 
         // Dto -> Domain 변환
         Recipe recipe = request.toDomain();
@@ -67,7 +67,7 @@ public class RecipeService {
     @Transactional
     public Recipe updateRecipe(long id, RecipeUpdateRequest request) {
         // 입력 데이터 로깅
-        log.debug("Updating recipe: ID='{}', request='{}'", id, request);
+        log.info("Updating recipe: ID='{}', request='{}'", id, request);
 
         // 리소스 존재 여부 확인 및 영속성 객체 획득
         Recipe recipe = getRecipe(id);
@@ -90,7 +90,7 @@ public class RecipeService {
     @Transactional
     public void deleteRecipe(long id) {
         // 입력 데이터 로깅
-        log.debug("Deleting recipe: ID='{}'", id);
+        log.info("Deleting recipe: ID='{}'", id);
 
         // 레시피 DB delete
         int result = recipeMapper.deleteRecipe(id);

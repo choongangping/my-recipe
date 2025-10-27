@@ -110,14 +110,35 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * RuntimeException (포괄적인 런타임 예외) 처리 (HTTP 500 Internal Server Error)
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleAllUncaughtRuntimeException(RuntimeException ex, HttpServletRequest request) {
+        // 예외 발생 시 분석을 위한 로깅
+        String traceId = generateTraceId();
+        log.error("[{}] An unexpected runtime error occurred: Message='{}', Path='{}'",
+                traceId, ex.getMessage(), request.getRequestURI(), ex);
+
+        // 에러 응답
+        ErrorResponse errorResponse = ErrorResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "ERR_UNEXPECTED_RUNTIME",
+                "서버 내부 오류가 발생했습니다.",
+                request.getRequestURI(),
+                traceId
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * Exception (포괄적인 예외) 처리 (HTTP 500 Internal Server Error)
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ex, HttpServletRequest request) {
         // 예외 발생 시 분석을 위한 로깅
         String traceId = generateTraceId();
-        log.error("[{}] An unexpected error occurred: {}",
-                traceId, ex.getMessage(), ex);
+        log.error("[{}] An unexpected server error occurred: Message='{}', Path='{}'",
+                traceId, ex.getMessage(), request.getRequestURI(), ex);
 
         // 에러 응답
         ErrorResponse errorResponse = ErrorResponse.of(

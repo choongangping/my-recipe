@@ -11,9 +11,9 @@ public class DataPersistenceException extends RuntimeException {
         this.errorCode = "ERR_COMMON_PERSISTENCE_ERROR";
     }
 
-    public DataPersistenceException(String message, String debugMessage) {
+    public DataPersistenceException(String message, String errorCode) {
         super(message);
-        this.errorCode = "ERR_COMMON_PERSISTENCE_ERROR";
+        this.errorCode = errorCode;
     }
 
     public DataPersistenceException(String message, String errorCode, String debugMessage) {
