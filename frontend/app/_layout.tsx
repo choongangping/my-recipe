@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import 'react-native-reanimated';
+import '@/assets/css/global.css';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -22,6 +23,7 @@ function CustomHeaderTitle() {
   );
 }
 
+// 앱 전체 레이아웃 (테마, header 설정 등)
 export default function RootLayout() {
   return (
     <ThemeProvider value={DefaultTheme}>
