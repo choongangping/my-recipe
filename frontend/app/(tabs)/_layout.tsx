@@ -1,30 +1,77 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
 import React from 'react';
+import { Tabs } from 'expo-router';
+import { Home, Utensils, Calendar, User, Box } from 'lucide-react-native';
 
-// 하단 탭 레이아웃 (각 탭별 텍스트, 아이콘, 라우트 설정 등)
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: '#000',
+        tabBarInactiveTintColor: '#9ca3af',
+        tabBarStyle: {
+            borderTopWidth: 1,
+            borderTopColor: '#e5e7eb',
+            height: 60,
+            paddingBottom: 8,
+            paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: '500',
+        },
       }}>
       <Tabs.Screen
-        name="index" // app/(tabs)/index.tsx
+        name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'home' : 'home-outline'} size={size} color={color} />
+          title: '홈',
+          tabBarIcon: ({ color, size }) => (
+            <Home size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="Login" // app/(tabs)/Login.tsx
+        name="Recipe"
         options={{
-          title: 'Login',
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? 'log-in' : 'log-in-outline'} size={size} color={color} />
+          title: '레시피',
+          tabBarIcon: ({ color, size }) => (
+            <Utensils size={size} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="Refrigerator"
+        options={{
+          title: '냉장고',
+          tabBarIcon: ({ color, size }) => (
+            <Box size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="MealPlan"
+        options={{
+          title: '식단',
+          tabBarIcon: ({ color, size }) => (
+            <Calendar size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Profile"
+        options={{
+          title: 'MY',
+          tabBarIcon: ({ color, size }) => (
+            <User size={size} color={color} />
+          ),
+        }}
+      />
+      
+      {/* Hide the login tab if it still exists in the file structure, we use the stack route for login now */}
+      <Tabs.Screen
+        name="Login"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
