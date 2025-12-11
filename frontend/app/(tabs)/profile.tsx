@@ -7,14 +7,14 @@ export default function ProfilePage() {
   return (
     <ProfileScreen 
       onBack={() => router.back()}
-      onEditProfileClick={() => router.push('/profile/edit_temp')}
+      onEditProfileClick={() => router.push('/profile/edit')}
       onMyRecipesClick={() => router.push('/profile/my-recipes')}
       onMyCommentsClick={() => router.push('/profile/my-comments')}
       onMyLikesClick={() => router.push('/profile/my-likes')}
       onMyBookmarksClick={() => router.push('/profile/my-bookmarks')}
       onNoticeClick={() => router.push('/notice')}
-      onTermsClick={() => router.push('/profile/terms_temp')}
-      onInquiryClick={() => router.push('/profile/inquiry_temp')}
+      onTermsClick={() => router.push('/profile/terms')}
+      onInquiryClick={() => router.push('/profile/inquiry')}
       onInfluencerRegisterClick={() => router.push('/profile/influencer-register')}
     />
   );

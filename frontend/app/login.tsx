@@ -6,7 +6,7 @@ export default function LoginPage() {
 
   return (
     <LoginScreen 
-      onSwitchToSignup={() => router.push('/signup_temp')}
+      onSwitchToSignup={() => router.push('/signup')}
       onLogoClick={() => router.push('/(tabs)')}
       onLoginSuccess={() => router.push('/(tabs)')}
       onFindIdClick={() => router.push('/find-id')}
