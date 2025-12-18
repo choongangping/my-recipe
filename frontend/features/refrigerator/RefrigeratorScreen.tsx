@@ -64,22 +64,17 @@ export function RefrigeratorScreen({ onBack }: RefrigeratorScreenProps) {
         return expiryDate < today;
       } else if (currentTab === "soon") {
         return expiryDate >= today && expiryDate <= soonDate;
-      } else {
-        // 'all' includes valid items (not expired)? 
-        // Original code: return expiryDate >= today; (so 'all' hides expired items?)
-        // Let's stick to original logic:
-        return expiryDate >= today;
-      }
+        } else {
+            // 'all' should include all items (including expired)
+            return true;
+        }
     });
   };
 
   // 탭별 개수 계산
   const getCounts = () => {
-    const all = ingredients.filter((item) => {
-      const expiryDate = new Date(item.expiryDate);
-      expiryDate.setHours(0, 0, 0, 0);
-      return expiryDate >= today;
-    }).length;
+        // 'all' represents the total number of ingredients (including expired)
+        const all = ingredients.length;
 
     const soon = ingredients.filter((item) => {
       const expiryDate = new Date(item.expiryDate);
@@ -292,7 +287,7 @@ export function RefrigeratorScreen({ onBack }: RefrigeratorScreenProps) {
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => handleDeleteIngredient(item.id)} style={styles.deleteButton}>
-                            <X size={20} color="#9ca3af" />
+                            <Trash2 size={20} color="#9ca3af" />
                         </TouchableOpacity>
                     </View>
                 ))
