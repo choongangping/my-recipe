@@ -7,6 +7,7 @@ export default function MealPlanPage() {
   return (
     <MealPlanScreen 
       onBack={() => router.back()}
+      onOpenRecipe={(id) => router.push(`/recipe/${id}` as any)}
     />
   );
 }
