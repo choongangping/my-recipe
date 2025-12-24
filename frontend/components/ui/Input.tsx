@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { TextInput, StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native';
 
 interface InputProps extends React.ComponentProps<typeof TextInput> {
   label?: string;
   error?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const Input = React.forwardRef<TextInput, InputProps>(
-  ({ className, style, label, error, ...props }, ref) => {
+  ({ className, style, label, error, containerStyle, ...props }, ref) => {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         {label && <Text style={styles.label}>{label}</Text>}
         <TextInput
           ref={ref}
@@ -31,6 +32,7 @@ Input.displayName = 'Input';
 const styles = StyleSheet.create({
   container: {
     gap: 8,
+    width: '100%',
   },
   label: {
      fontSize: 14,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
-    ArrowLeft, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Crown, Clock, Star, Heart, MessageCircle, Bookmark, Search
+    ArrowLeft, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Clock, Star, Heart, MessageCircle, Bookmark, Search
 } from 'lucide-react-native';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -32,20 +32,6 @@ const DUMMY_RECIPES = Array.from({ length: 47 }, (_, i) => ({
   cookingTime: ['15분', '20분', '30분', '40분', '45분', '60분', '90분'][i % 7],
   rating: Number((3.5 + Math.random() * 1.5).toFixed(1)),
 }));
-
-// 금주 핫게시판 (좋아요가 가장 많은 게시글)
-const HOT_RECIPE = {
-  id: 999,
-  title: '엄마가 알려주신 비법 김치찌개 황금레시피',
-  description: '집에서 쉽게 만드는 정통 김치찌개',
-  author: '요리왕',
-  date: '2024.12.5',
-  image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
-  likes: 1247,
-  comments: 358,
-  cookingTime: '30분',
-  rating: 5.0,
-};
 
 const ITEMS_PER_PAGE = 10;
 
@@ -98,86 +84,74 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
             <TouchableOpacity onPress={onBack} style={styles.iconButton}>
               <ArrowLeft size={24} color="#374151" />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>레시피북</Text>
+            <Text style={styles.headerTitle}>레시피</Text>
         </View>
         
         {/* 검색창 */}
         <View style={styles.searchContainer}>
-             <View style={styles.searchInputWrapper}>
-               <Input
-                  placeholder="레시피 검색..."
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                  onSubmitEditing={handleSearch}
-                  style={styles.searchInput}
-               />
-               <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-                  <Search size={20} color="white" />
-               </TouchableOpacity>
-             </View>
+          <View style={styles.searchInputWrapper}>
+            <View style={{ flex: 1 }}>
+              <Input
+                placeholder="레시피 검색..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                onSubmitEditing={handleSearch}
+                style={styles.searchInput}
+              />
+            </View>
+            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+              <Search size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* 카테고리 */}
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryTitle}>카테고리</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.categoryList}>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>전체</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>한식</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>중식</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>일식</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>양식</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+
+        {/* 정렬 조건 */}
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryTitle}>정렬 조건</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.categoryList}>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>좋아요순</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>최신순</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>가나다순</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.categoryItem}>
+                <Text style={styles.categoryItemText}>조회순</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* 금주 핫게시판 */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Crown size={20} color="#374151" />
-            <Text style={styles.sectionTitle}>금주 레시피 탑1</Text>
-          </View>
-          
-          <TouchableOpacity
-            onPress={() => onRecipeClick(HOT_RECIPE.id)}
-            style={styles.hotCard}
-            activeOpacity={0.8}
-          >
-            <View style={styles.cardContent}>
-              {/* BEST 배지 & 썸네일 */}
-              <View style={styles.imageContainer}>
-                <View style={styles.badge}>
-                  <Crown size={12} color="white" />
-                  <Text style={styles.badgeText}>BEST</Text>
-                </View>
-                <Image source={{ uri: HOT_RECIPE.image }} style={styles.hotImage} />
-              </View>
-
-              {/* 중앙 정보 */}
-              <View style={styles.infoContainer}>
-                <Text style={styles.title} numberOfLines={1}>{HOT_RECIPE.title}</Text>
-                <Text style={styles.description} numberOfLines={1}>{HOT_RECIPE.description}</Text>
-                
-                {/* 작성자 & 날짜 */}
-                <View style={styles.metaRow}>
-                  <Text style={styles.author}>{HOT_RECIPE.author}</Text>
-                  <Text style={styles.dot}>·</Text>
-                  <Text style={styles.date}>{HOT_RECIPE.date}</Text>
-                </View>
-
-                {/* 별점 & 조리시간 */}
-                <View style={styles.statsRow}>
-                  {renderStars(HOT_RECIPE.rating)}
-                  <Text style={styles.ratingText}>{HOT_RECIPE.rating.toFixed(1)}</Text>
-                  <View style={styles.timeContainer}>
-                    <Clock size={14} color="#4b5563" />
-                    <Text style={styles.timeText}>{HOT_RECIPE.cookingTime}</Text>
-                  </View>
-                </View>
-              </View>
-
-              {/* 우측 액션 */}
-              <View style={styles.actionsColumn}>
-                <View style={styles.actionItem}>
-                  <Heart size={16} color="#6b7280" />
-                  <Text style={styles.actionText}>{HOT_RECIPE.likes}</Text>
-                </View>
-                <View style={styles.actionItem}>
-                  <MessageCircle size={16} color="#6b7280" />
-                  <Text style={styles.actionText}>{HOT_RECIPE.comments}</Text>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
 
         {/* 일반 레시피 리스트 */}
         <View style={styles.listContainer}>
@@ -319,25 +293,28 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
 }
 
 const styles = StyleSheet.create({
+  // 전체 컨테이너
   container: {
     flex: 1,
     backgroundColor: '#fff', // bg-gray-50 equivalent maybe?
   },
+
+  // 헤더
   header: {
     backgroundColor: 'white',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 1 },
+    borderBottomColor: '#e7e7e7',
+    // elevation: 2,
+    // shadowColor: '#000',
+    // shadowOpacity: 0.05,
+    // shadowRadius: 2,
+    // shadowOffset: { width: 0, height: 1 },
   },
   titleRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: 20,
       gap: 12,
   },
   iconButton: {
@@ -348,8 +325,11 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: '#000',
   },
+
+  // 검색
   searchContainer: {
-      //
+      marginBottom: 32,
+      width: '100%',
   },
   searchInputWrapper: {
       flexDirection: 'row',
@@ -357,9 +337,7 @@ const styles = StyleSheet.create({
       gap: 8,
   },
   searchInput: {
-      flex: 1,
       backgroundColor: '#f9fafb',
-      borderRadius: 12,
   },
   searchButton: {
       width: 44,
@@ -369,61 +347,43 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
   },
+
+  // 레시피 상단
+  contentHeaderContainer: {
+    marginBottom: 50,
+  },
+  // 카테고리
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 8,
+    minWidth: 100,
+  },
+  categoryList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  categoryItem: {
+    marginRight: 8,
+  },
+  categoryItemText: {
+    fontSize: 14,
+    color: '#374151',
+  },
+
+  // 레시피 리스트
   scrollContent: {
       padding: 16,
       paddingBottom: 40,
   },
-  section: {
-      marginBottom: 24,
-  },
-  sectionHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 12,
-      gap: 8,
-  },
-  sectionTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#111827',
-  },
-  hotCard: {
-      backgroundColor: '#f3f4f6', // gradient simul
-      borderRadius: 16,
-      borderWidth: 2,
-      borderColor: 'black',
-      padding: 12,
-  },
   cardContent: {
       flexDirection: 'row',
       gap: 12,
-  },
-  imageContainer: {
-      position: 'relative',
-  },
-  badge: {
-      position: 'absolute',
-      top: -4,
-      left: -4,
-      zIndex: 10,
-      backgroundColor: '#374151',
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 6,
-      paddingVertical: 2,
-      borderRadius: 6,
-      gap: 2,
-  },
-  badgeText: {
-      color: 'white',
-      fontSize: 10,
-      fontWeight: 'bold',
-  },
-  hotImage: {
-      width: 80,
-      height: 80,
-      borderRadius: 12,
-      backgroundColor: '#e5e7eb',
   },
   infoContainer: {
       flex: 1,
@@ -481,11 +441,6 @@ const styles = StyleSheet.create({
       fontSize: 12,
       color: '#4b5563',
   },
-  actionsColumn: {
-      justifyContent: 'flex-end',
-      alignItems: 'flex-end',
-      gap: 4,
-  },
   actionItem: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -520,6 +475,7 @@ const styles = StyleSheet.create({
       gap: 4,
   },
 
+  // 페이징
   pagination: {
       flexDirection: 'row',
       justifyContent: 'center',
