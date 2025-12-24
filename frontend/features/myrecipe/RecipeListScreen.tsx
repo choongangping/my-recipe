@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
@@ -7,14 +7,30 @@ import {
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 
+// 레시피 화면 props 인터페이스
 interface RecipeListScreenProps {
   onBack: () => void;
   onRecipeClick: (recipeId: number) => void;
   onWriteClick?: () => void;
 }
 
-// 더미 데이터
-const DUMMY_RECIPES = Array.from({ length: 47 }, (_, i) => ({
+// 레시피 인터페이스
+interface Recipe {
+  id: number;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  image: string;
+  likes: number;
+  comments: number;
+  cookingTime: string;
+  rating: number;
+  views: number;
+}
+
+// 레시피 더미 데이터
+const DUMMY_RECIPES: Recipe[] = Array.from({ length: 47 }, (_, i) => ({
   id: i + 1,
   title: i % 5 === 0 ? `${['김치찌개', '된장찌개', '부대찌개', '순두부찌개', '청국장'][i % 5]} 만들기` :
          i % 5 === 1 ? `${['불고기', '제육볶음', '닭갈비', 'LA갈비', '삼겹살'][Math.floor(i / 5) % 5]} 레시피` :
@@ -31,30 +47,111 @@ const DUMMY_RECIPES = Array.from({ length: 47 }, (_, i) => ({
   comments: Math.floor(Math.random() * 100),
   cookingTime: ['15분', '20분', '30분', '40분', '45분', '60분', '90분'][i % 7],
   rating: Number((3.5 + Math.random() * 1.5).toFixed(1)),
+  views: Math.floor(Math.random() * 1000),
 }));
 
+// 페이지 당 레시피 개수
 const ITEMS_PER_PAGE = 10;
+
+// 카테고리 목록
+const CATEGORIES = [
+  {value: "전체", label: "전체"},
+  {value: "한식", label: "한식"},
+  {value: "중식", label: "중식"},
+  {value: "일식", label: "일식"},
+  {value: "양식", label: "양식"},
+  {value: "기타", label: "기타"},
+];
+
+// 정렬 옵션
+const ORDER_OPTIONS = [
+  {value: "좋아요순", label: "좋아요순"},
+  {value: "최신순", label: "최신순"},
+  {value: "가나다순", label: "가나다순"},
+  {value: "조회순", label: "조회순"},
+  {value: "댓글순", label: "댓글순"},
+];
 
 export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: RecipeListScreenProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [selectedOrder, setSelectedOrder] = useState("좋아요순");
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState<number[]>([]);
+
+  // 검색 필터링 함수
+  const filterByQuery = (recipes: Recipe[], query: string) => {
+    if (!query) return recipes;
+    return recipes.filter(recipe => 
+      recipe.title.includes(query) || 
+      recipe.description.includes(query) ||
+      recipe.author.includes(query)
+    );
+  };
+
+  // 카테고리 필터링 함수
+  const filterByCategory = (recipes: Recipe[], category: string) => {
+    if (category === "전체") return recipes;
+    // 실제 카테고리 데이터가 생긴다면 아래 주석 해제하여 사용
+    // return recipes.filter(recipe => recipe.category === category);
+    return recipes; 
+  };
+
+  // 정렬 함수
+  const sortRecipes = (recipes: Recipe[], order: string) => {
+    // 복사본 생성 (원본 배열 유지)
+    return [...recipes].sort((a, b) => {
+      switch (order) {
+        case "좋아요순": return b.likes - a.likes;
+        case "최신순": return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case "가나다순": return a.title.localeCompare(b.title);
+        case "조회순": return b.views - a.views;
+        case "댓글순": return b.comments - a.comments;
+        default: return 0;
+      }
+    });
+  };
   
-  const totalPages = Math.ceil(DUMMY_RECIPES.length / ITEMS_PER_PAGE);
+  // 레시피 필터링
+  const filteredRecipes = useMemo(() => {
+    let result = [...DUMMY_RECIPES];
+    result = filterByQuery(result, submittedQuery);
+    result = filterByCategory(result, selectedCategory);
+    result = sortRecipes(result, selectedOrder);
+    return result;
+  }, [submittedQuery, selectedCategory, selectedOrder]);
+
+  // 검색 함수
+  const handleSearch = () => {
+    setSubmittedQuery(searchQuery);
+    setCurrentPage(1); // 검색 시 1페이지로 이동
+  };
+
+  // 카테고리 함수
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // 카테고리 변경 시 1페이지로 이동
+  };
+
+  // 정렬 함수
+  const handleOrderChange = (order: string) => {
+    setSelectedOrder(order);
+    setCurrentPage(1); // 정렬 변경 시 1페이지로 이동
+  };
+
+  // 페이징
+  const totalPages = Math.ceil(filteredRecipes.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentRecipes = DUMMY_RECIPES.slice(startIndex, endIndex);
+  const currentRecipes = filteredRecipes.slice(startIndex, endIndex);
 
   const goToFirstPage = () => setCurrentPage(1);
   const goToLastPage = () => setCurrentPage(totalPages);
   const goToPrevPage = () => setCurrentPage(prev => Math.max(1, prev - 1));
   const goToNextPage = () => setCurrentPage(prev => Math.min(totalPages, prev + 1));
 
-  const handleSearch = () => {
-    console.log("검색어:", searchQuery);
-    // 검색 로직 구현
-  };
-
+  // 별점 렌더링
   const renderStars = (rating: number) => {
     return (
       <View style={styles.starsContainer}>
@@ -70,6 +167,7 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
     );
   };
 
+  // 북마크 토글
   const toggleBookmark = (recipeId: number) => {
     setBookmarkedRecipes((prev) =>
       prev.includes(recipeId) ? prev.filter((id) => id !== recipeId) : [...prev, recipeId]
@@ -110,21 +208,21 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
           <Text style={styles.categoryTitle}>카테고리</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.categoryList}>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>전체</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>한식</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>중식</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>일식</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>양식</Text>
-              </TouchableOpacity>
+              {CATEGORIES.map((category) => (
+                <TouchableOpacity
+                  key={category.value}
+                  style={[
+                    styles.categoryItem,
+                    selectedCategory === category.value && styles.tagItem,
+                  ]}
+                  onPress={() => handleCategoryChange(category.value)}
+                >
+                  <Text style={[
+                    styles.categoryItemText,
+                    selectedCategory === category.value && styles.tagItemText,
+                  ]}>{category.label}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </ScrollView>
         </View>
@@ -134,18 +232,21 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
           <Text style={styles.categoryTitle}>정렬 조건</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.categoryList}>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>좋아요순</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>최신순</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>가나다순</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.categoryItem}>
-                <Text style={styles.categoryItemText}>조회순</Text>
-              </TouchableOpacity>
+              {ORDER_OPTIONS.map((option) => (
+                <TouchableOpacity
+                  key={option.value}
+                  style={[
+                    styles.categoryItem,
+                    selectedOrder === option.value && styles.tagItem,
+                  ]}
+                  onPress={() => handleOrderChange(option.value)}
+                >
+                  <Text style={[
+                    styles.categoryItemText,
+                    selectedOrder === option.value && styles.tagItemText,
+                  ]}>{option.label}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </ScrollView>
         </View>
@@ -285,7 +386,7 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
 
         {/* 페이지 정보 */}
         <Text style={styles.pageInfo}>
-          {currentPage} / {totalPages} 페이지 (총 {DUMMY_RECIPES.length}개)
+          {currentPage} / {totalPages || 1} 페이지 (총 {filteredRecipes.length}개)
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -352,6 +453,7 @@ const styles = StyleSheet.create({
   contentHeaderContainer: {
     marginBottom: 50,
   },
+
   // 카테고리
   categoryContainer: {
     flexDirection: 'row',
@@ -369,11 +471,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryItem: {
-    marginRight: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
   categoryItemText: {
     fontSize: 14,
     color: '#374151',
+  },
+
+  // 태그 스타일
+  tagItem: {
+    backgroundColor: '#b9b9b9ff',
+    borderRadius: 12,
+  },
+  tagItemText: {
+    color: '#ffffff',
   },
 
   // 레시피 리스트
