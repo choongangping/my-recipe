@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { ChevronLeft, Heart, MessageCircle } from 'lucide-react-native';
 
 interface MyBookmarksScreenProps {
@@ -31,7 +30,7 @@ const myBookmarkedRecipes = [
 
 export function MyBookmarksScreen({ onBack, onRecipeClick }: MyBookmarksScreenProps) {
   return (
-    <SafeAreaView style={styles.container} edges={["top","bottom"]}>
+    <SafeAreaView style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton}>

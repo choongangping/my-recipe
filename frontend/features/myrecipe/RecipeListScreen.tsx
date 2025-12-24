@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { 
     ArrowLeft, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Crown, Clock, Star, Heart, MessageCircle, Bookmark, Search
 } from 'lucide-react-native';
@@ -91,7 +90,7 @@ export function RecipeListScreen({ onBack, onRecipeClick, onWriteClick }: Recipe
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
         <View style={styles.titleRow}>

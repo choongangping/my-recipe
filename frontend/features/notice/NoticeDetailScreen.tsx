@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { ChevronLeft, ChevronUp, ChevronDown, List } from 'lucide-react-native';
 
 interface NoticeDetailScreenProps {
@@ -138,7 +137,7 @@ export function NoticeDetailScreen({ noticeId, onBack, onNoticeClick }: NoticeDe
 
   if (!notice) {
     return (
-      <SafeAreaView style={styles.container} edges={["top"]}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
             <TouchableOpacity onPress={onBack} style={styles.backButton}>
                 <ChevronLeft size={24} color="#374151" />
@@ -153,7 +152,7 @@ export function NoticeDetailScreen({ noticeId, onBack, onNoticeClick }: NoticeDe
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
