@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Image, Alert } from 'react-native';
 import { ChevronLeft, Edit, Trash2, Heart, MessageCircle } from 'lucide-react-native';
 
 interface MyRecipesScreenProps {
@@ -63,7 +62,7 @@ export function MyRecipesScreen({ onBack, onRecipeClick }: MyRecipesScreenProps)
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top","bottom"]}>
+    <SafeAreaView style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton}>

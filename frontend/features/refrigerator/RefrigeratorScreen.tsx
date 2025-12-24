@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, TextInput, Modal, Alert, FlatList } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, SafeAreaView, Image, TextInput, Modal, Alert, FlatList } from 'react-native';
 import { Plus, X, ChevronLeft, Camera, Search, Clock, Heart, MessageCircle, Star, RefreshCw, Trash2 } from 'lucide-react-native';
 import { Button } from '../../components/ui/Button'; // Assuming Button is available
 import { Input } from '../../components/ui/Input'; // Assuming Input is available
@@ -218,7 +217,7 @@ export function RefrigeratorScreen({ onBack }: RefrigeratorScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
       {/* 헤더 */}
       <View style={styles.header}>
         <View style={styles.headerTop}>

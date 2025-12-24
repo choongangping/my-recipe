@@ -17,18 +17,18 @@ export default function HomePage() {
       onRecipeClick={(id) => router.push(`/recipe/${id}` as any)}
       isLoggedIn={isLoggedIn}
       onLogout={handleLogout}
-      onLoginClick={() => router.push('/login')}
+      onLoginClick={() => router.push('/Login')}
       onWriteClick={() => {
         if (!isLoggedIn) {
-            router.push('/login');
+            router.push('/Login');
             return;
         }
-        router.push('/recipe');
+        router.push('/recipe/Write');
       }}
-      onRecipeListClick={() => router.push('/(tabs)/recipe')}
-      onRefrigeratorClick={() => router.push('/(tabs)/refrigerator')}
-      onMealPlanClick={() => router.push('/(tabs)/meal-plan')}
-      onProfileClick={() => router.push('/(tabs)/profile')}
+      onRecipeListClick={() => router.push('/(tabs)/Recipe')}
+      onRefrigeratorClick={() => router.push('/(tabs)/Refrigerator')}
+      onMealPlanClick={() => router.push('/(tabs)/MealPlan')}
+      onProfileClick={() => router.push('/(tabs)/Profile')}
     />
   );
 }
